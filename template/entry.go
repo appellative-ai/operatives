@@ -2,7 +2,7 @@ package template
 
 import (
 	"encoding/json"
-	"github.com/appellative-ai/core/iox"
+	"github.com/appellative-ai/common/iox"
 )
 
 func AddEntry(agent Agent, fileName string) error {

@@ -3,7 +3,7 @@ package namespace
 import (
 	"bytes"
 	"context"
-	"github.com/appellative-ai/center/template"
+	"github.com/appellative-ai/operatives/template"
 	"github.com/appellative-ai/postgres/retrieval"
 	"net/http"
 )
@@ -13,7 +13,7 @@ type tagRetrieval struct {
 	Args []arg  `json:"args"`
 }
 
-func retrievalRequest(ctx context.Context, retriever *retrieval.Interface, processor template.Agent, r *http.Request) (*bytes.Buffer, error) {
+func filterRetrieval(ctx context.Context, retriever *retrieval.Interface, processor template.Agent, r *http.Request) (*bytes.Buffer, error) {
 	name := ""
 	res, err := processor.Build(name, nil)
 	if err != nil {

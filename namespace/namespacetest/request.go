@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
-	"github.com/appellative-ai/core/std"
+	"github.com/appellative-ai/common/core"
 	"github.com/appellative-ai/postgres/request"
 	"github.com/appellative-ai/postgres/retrieval"
 )
@@ -14,12 +14,12 @@ var (
 )
 
 type storage struct {
-	cache *std.MapT[string, any]
+	cache *core.MapT[string, any]
 }
 
 func newStorage() *storage {
 	s := new(storage)
-	s.cache = std.NewSyncMap[string, any]()
+	s.cache = core.NewSyncMap[string, any]()
 	return s
 }
 

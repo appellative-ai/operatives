@@ -5,7 +5,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"github.com/appellative-ai/center/template"
+	"github.com/appellative-ai/operatives/template"
 	"github.com/appellative-ai/postgres/retrieval"
 	"net/http"
 	"reflect"

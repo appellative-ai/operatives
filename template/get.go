@@ -2,12 +2,12 @@ package template
 
 import (
 	"encoding/json"
-	"github.com/appellative-ai/core/httpx"
+	"github.com/appellative-ai/common/core"
 )
 
 // TODO: check for not found
 func (a *agentT) get(name string) (Entry, error) {
-	ctx, cancel := httpx.NewContext(nil, a.timeout)
+	ctx, cancel := core.NewContext(nil, a.timeout)
 	defer cancel()
 
 	buf, err := a.retriever.Marshal(ctx, name, defaultSql, name)

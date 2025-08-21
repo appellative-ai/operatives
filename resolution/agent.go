@@ -1,13 +1,9 @@
-package namespace
+package resolution
 
 import (
-	"bytes"
-	"errors"
 	"fmt"
 	"github.com/appellative-ai/common/core"
-	"github.com/appellative-ai/common/httpx"
 	"github.com/appellative-ai/common/messaging"
-	"github.com/appellative-ai/operatives/template"
 	"github.com/appellative-ai/postgres/request"
 	"github.com/appellative-ai/postgres/retrieval"
 	"net/http"
@@ -15,14 +11,9 @@ import (
 )
 
 const (
-	AgentName = "common:core:agent/namespace/center"
+	AgentName = "common:core:agent/resolution/center"
 	duration  = time.Second * 30
 	timeout   = time.Second * 4
-
-	retrievalPath    = "/namespace/retrieval"
-	relationPath     = "/namespace/relation"
-	requestThingPath = "/namespace/request/thing"
-	requestLinkPath  = "/namespace/request/link"
 )
 
 type agentT struct {
@@ -34,7 +25,6 @@ type agentT struct {
 
 	retriever *retrieval.Interface
 	requester *request.Interface
-	processor template.Agent
 }
 
 func newAgent() *agentT {
@@ -42,10 +32,8 @@ func newAgent() *agentT {
 	a.timeout = timeout
 	a.ticker = messaging.NewTicker(messaging.ChannelEmissary, duration)
 	a.emissary = messaging.NewEmissaryChannel()
-
 	a.retriever = retrieval.Retriever
 	a.requester = request.Requester
-	a.processor = template.NewAgent(retrieval.Retriever)
 	return a
 }
 
@@ -91,7 +79,7 @@ func (a *agentT) Message(m *messaging.Message) {
 
 // Run - run the agent
 func (a *agentT) run() {
-	go emissaryAttend(a)
+	//go emissaryAttend(a)
 }
 
 func (a *agentT) emissaryFinalize() {
@@ -102,25 +90,17 @@ func (a *agentT) emissaryFinalize() {
 // Link - chainable exchange
 func (a *agentT) Link(next core.Exchange) core.Exchange {
 	return func(req *http.Request) (resp *http.Response, err error) {
-		ctx, cancel := core.NewContext(nil, a.timeout)
-		defer cancel()
-		var buf *bytes.Buffer
+		//ctx, cancel := httpx.NewContext(nil, a.timeout)
+		//defer cancel()
 
-		switch req.URL.Path {
-		case retrievalPath:
-			buf, err = retrievalRequest(ctx, a.retriever, a.processor, req)
-		case relationPath:
-			buf, err = relationRequest(ctx, a.retriever, a.processor, req)
-		case requestThingPath:
-			_, err = thingRequest(ctx, a.requester, req.URL.Query())
-		case requestLinkPath:
-			_, err = linkRequest(ctx, a.requester, req.URL.Query())
-		default:
-			return httpx.NewResponse(http.StatusBadRequest, nil, nil), errors.New(fmt.Sprintf("path is invalid [%v]", req.URL.Path))
-		}
-		if err != nil {
-			return httpx.NewResponse(http.StatusInternalServerError, nil, nil), err
-		}
-		return httpx.NewResponse(http.StatusOK, nil, buf), nil
+		/*
+			buf, err1 := a.retriever.Marshal(ctx, ""thingQueryName, "select * from thing", nil)
+			if err1 != nil {
+				return httpx.NewResponse(messaging.StatusExecError, nil, err1), err1
+			}
+			return httpx.NewResponse(http.StatusOK, nil, buf), nil
+
+		*/
+		return
 	}
 }

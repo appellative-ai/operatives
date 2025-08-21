@@ -3,7 +3,7 @@ package namespace
 import (
 	"context"
 	"errors"
-	"github.com/appellative-ai/core/std"
+	"github.com/appellative-ai/common/core"
 	"github.com/appellative-ai/postgres/request"
 	"net/url"
 )
@@ -42,7 +42,7 @@ func createThingArgs(values url.Values) (string, []any, error) {
 	if author == "" {
 		return "", nil, errors.New("author is empty")
 	}
-	n := std.NewName(name)
+	n := core.NewName(name)
 	var args []any
 
 	args = append(args, name)

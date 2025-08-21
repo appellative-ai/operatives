@@ -2,8 +2,8 @@ package template
 
 import (
 	"errors"
+	"github.com/appellative-ai/common/core"
 	"github.com/appellative-ai/common/messaging"
-	//"github.com/appellative-ai/core/std"
 	"github.com/appellative-ai/postgres/retrieval"
 	"time"
 )
@@ -22,7 +22,7 @@ type Agent interface {
 
 type agentT struct {
 	timeout   time.Duration
-	cache     *std.MapT[string, Entry]
+	cache     *core.MapT[string, Entry]
 	retriever *retrieval.Interface
 }
 
@@ -33,7 +33,7 @@ func NewAgent(retriever *retrieval.Interface) Agent {
 func newAgent(retriever *retrieval.Interface) *agentT {
 	a := new(agentT)
 	a.timeout = timeout
-	a.cache = std.NewSyncMap[string, Entry]()
+	a.cache = core.NewSyncMap[string, Entry]()
 	a.retriever = retriever
 	return a
 }

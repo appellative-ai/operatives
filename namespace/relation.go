@@ -3,7 +3,7 @@ package namespace
 import (
 	"bytes"
 	"context"
-	"github.com/appellative-ai/center/template"
+	"github.com/appellative-ai/operatives/template"
 	"github.com/appellative-ai/postgres/retrieval"
 	"net/http"
 )

@@ -2,7 +2,7 @@ package namespace
 
 import (
 	"fmt"
-	"github.com/appellative-ai/core/std"
+	"github.com/appellative-ai/common/core"
 	"github.com/appellative-ai/postgres/request/requesttest"
 	"net/url"
 )
@@ -34,7 +34,7 @@ func ExampleThingRequest() {
 	r, err := thingRequest(nil, nil, nil)
 	fmt.Printf("test: thingRequest() -> [result:%v] [err:%v]\n", r, err)
 
-	m := std.NewSyncMap[string, any]()
+	m := core.NewSyncMap[string, any]()
 	requester := requesttest.NewRequester(m)
 	values := make(url.Values)
 	values.Add(nameName, name)

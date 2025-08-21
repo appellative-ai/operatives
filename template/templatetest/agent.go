@@ -13,7 +13,7 @@ const (
 )
 
 type agentT struct {
-	cache *std.MapT[string, template.Entry]
+	cache *core.MapT[string, template.Entry]
 }
 
 func NewAgent(fileName string) template.Agent {
@@ -22,7 +22,7 @@ func NewAgent(fileName string) template.Agent {
 
 func newAgent(fileName string) *agentT {
 	a := new(agentT)
-	a.cache = std.NewSyncMap[string, template.Entry]()
+	a.cache = core.NewSyncMap[string, template.Entry]()
 	if fileName == "" {
 		return a
 	}
