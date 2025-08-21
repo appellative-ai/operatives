@@ -2,6 +2,7 @@ package logx
 
 import (
 	"fmt"
+	"github.com/appellative-ai/common/core"
 	"log"
 	"net/http"
 	"time"
@@ -19,6 +20,10 @@ const (
 
 	failsafeUri     = "https://invalid-uri.com"
 	contentEncoding = "Content-Encoding"
+)
+
+var (
+	Origin *OriginT
 )
 
 func init() {
@@ -67,7 +72,7 @@ func LogEgress(operators []Operator, start time.Time, duration time.Duration, ro
 }
 
 // LogStatus - log status
-func LogStatus(name string, status any) {
+func LogStatus(name string, status *core.Status) {
 	log.Printf("%v %v\n", name, status)
 }
 

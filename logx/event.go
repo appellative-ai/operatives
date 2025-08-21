@@ -61,20 +61,18 @@ func (e *event) value(value string) string {
 		return e.route
 
 		// Origin
-		/*
-			case OriginRegionOperator:
-				return operations.Origin().Region
-			case OriginZoneOperator:
-				return operations.Origin().Zone
-			case OriginSubZoneOperator:
-				return operations.Origin().SubZone
-			case OriginHostOperator:
-				return operations.Origin().Host
-			case OriginInstanceIdOperator:
-				return operations.Origin().InstanceId
 
+	case OriginRegionOperator:
+		return Origin.Region
+	case OriginZoneOperator:
+		return Origin.Zone
+	case OriginSubZoneOperator:
+		return Origin.SubZone
+	case OriginHostOperator:
+		return Origin.Host
+	case OriginInstanceIdOperator:
+		return Origin.InstanceId
 
-		*/
 		// Request
 	case RequestMethodOperator:
 		return e.newReq.Method
