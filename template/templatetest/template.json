@@ -1,0 +1,44 @@
+[
+  {
+    "name":"common:core:retrieval/query/test3",
+    "sql":"CALL dbo.QueryNamespace($1,$2,$3)",
+    "params":[
+      {
+        "name":"name",
+        "nullable":true,
+        "type":"string",
+        "sql-type":""
+      },
+      {
+        "name":"count",
+        "nullable":false,
+        "type":"int",
+        "sql-type":""
+      },
+      {
+        "name":"createDate",
+        "nullable":false,
+        "type":"string",
+        "sql-type":"DateTime"
+      }
+    ]
+  },
+  {
+    "name":"common:core:retrieval/get/test2",
+    "sql":"CALL dbo.GetThing($1,$2)",
+    "params":[
+      {
+        "name":"name",
+        "nullable":true,
+        "type":"string",
+        "sql-type":""
+      },
+      {
+        "name":"count",
+        "nullable":false,
+        "type":"int",
+        "sql-type":""
+      }
+    ]
+  }
+]
