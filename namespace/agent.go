@@ -108,7 +108,7 @@ func (a *agentT) Link(next core.Exchange) core.Exchange {
 
 		switch req.URL.Path {
 		case retrievalPath:
-			buf, err = retrievalRequest(ctx, a.retriever, a.processor, req)
+			buf, err = filterRetrieval(ctx, a.retriever, a.processor, req)
 		case relationPath:
 			buf, err = relationRequest(ctx, a.retriever, a.processor, req)
 		case requestThingPath:

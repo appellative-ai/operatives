@@ -3,8 +3,8 @@ module github.com/appellative-ai/operatives
 go 1.23.11
 
 require (
-	github.com/appellative-ai/common v0.0.0-20250821202746-a94613c4b5a2
-	github.com/appellative-ai/postgres v0.0.0-20250821134236-54b64e6fddc7
+	github.com/appellative-ai/common v0.0.0-20250822101223-9d94c63278ff
+	github.com/appellative-ai/postgres v0.0.0-20250821185602-58f07da999b8
 )
 
 require (
