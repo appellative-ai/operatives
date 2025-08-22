@@ -106,21 +106,34 @@ func (a *agentT) Link(next core.Exchange) core.Exchange {
 		defer cancel()
 		var buf *bytes.Buffer
 
-		switch req.URL.Path {
-		case retrievalPath:
-			buf, err = filterRetrieval(ctx, a.retriever, a.processor, req)
-		case relationPath:
-			buf, err = relationRequest(ctx, a.retriever, a.processor, req)
-		case requestThingPath:
-			_, err = thingRequest(ctx, a.requester, req.URL.Query())
-		case requestLinkPath:
-			_, err = linkRequest(ctx, a.requester, req.URL.Query())
+		switch req.Method {
+		case http.MethodGet:
+			if req.URL.Path == retrievalPath {
+				buf, err = filterRetrieval(ctx, a.retriever, a.processor, req)
+			} else {
+				return httpx.NewResponse(http.StatusBadRequest, nil, nil), errors.New(fmt.Sprintf("resource is invalid [%v] for GET method", req.URL.Path))
+			}
+		case http.MethodPost:
+			switch req.URL.Path {
+			case retrievalPath:
+				buf, err = queryRetrieval(ctx, a.retriever, a.processor, req)
+			case relationPath:
+				buf, err = relationRequest(ctx, a.retriever, a.processor, req)
+			case requestThingPath:
+				_, err = thingRequest(ctx, a.requester, req.URL.Query())
+			case requestLinkPath:
+				_, err = linkRequest(ctx, a.requester, req.URL.Query())
+			default:
+				return httpx.NewResponse(http.StatusBadRequest, nil, nil), errors.New(fmt.Sprintf("resource is invalid [%v]", req.URL.Path))
+			}
 		default:
-			return httpx.NewResponse(http.StatusBadRequest, nil, nil), errors.New(fmt.Sprintf("path is invalid [%v]", req.URL.Path))
+			return httpx.NewResponse(http.StatusMethodNotAllowed, nil, nil), nil
 		}
 		if err != nil {
 			return httpx.NewResponse(http.StatusInternalServerError, nil, nil), err
 		}
+		h := new(http.Header)
+		h.Add(httpx.ContentType, httpx.ContentTypeJson)
 		return httpx.NewResponse(http.StatusOK, nil, buf), nil
 	}
 }
