@@ -1,4 +1,4 @@
-package concurrency
+package retry
 
 import "fmt"
 
@@ -8,6 +8,6 @@ func ExampleNewAgent() {
 	fmt.Printf("test: newAgent() -> [%v]\n", a)
 
 	//Output:
-	//test: newAgent() -> [common:core:agent/operative/concurrency]
+	//test: newAgent() -> [common:core:agent/operative/retry]
 
 }

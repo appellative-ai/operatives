@@ -1,4 +1,4 @@
-package concurrency
+package retry
 
 import (
 	"github.com/appellative-ai/common/core"

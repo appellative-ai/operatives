@@ -1,4 +1,4 @@
-package concurrency
+package retry
 
 import (
 	"net/http"

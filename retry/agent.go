@@ -1,4 +1,4 @@
-package concurrency
+package retry
 
 import (
 	"github.com/appellative-ai/common/core"
@@ -11,7 +11,7 @@ import (
 )
 
 const (
-	AgentName = "common:core:agent/operative/concurrency"
+	AgentName = "common:core:agent/operative/retry"
 	duration  = time.Second * 30
 
 	//collectiveName = "collective"
@@ -82,7 +82,7 @@ func (a *agentT) Message(m *messaging.Message) {
 func (a *agentT) Exchange(req *http.Request) (resp *http.Response, err error) {
 	ctx, cancel := core.NewContext(req.Context(), a.timeout)
 	defer cancel()
-	
+
 	req = req.Clone(ctx)
 	err = newURL(req, a.host1.Load().(string))
 	if err != nil {
