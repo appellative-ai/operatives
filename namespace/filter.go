@@ -8,18 +8,13 @@ import (
 	"net/http"
 )
 
-type arg struct {
-	Name  string `json:"name"`
-	Value string `json:"value"`
-}
-
-type tagRelation struct {
+type tagRetrieval struct {
 	Name string `json:"name"`
 	Args []arg  `json:"args"`
 }
 
-// relationRetrieval - applies to current and all linked collectives
-func relationRetrieval(ctx context.Context, retriever *retrieval.Interface, processor template.Agent, r *http.Request) (*bytes.Buffer, error) {
+// filterRetrieval - applies to current and all linked collectives
+func filterRetrieval(ctx context.Context, retriever *retrieval.Interface, processor template.Agent, r *http.Request) (*bytes.Buffer, error) {
 	name := ""
 	res, err := processor.Build(name, nil)
 	if err != nil {

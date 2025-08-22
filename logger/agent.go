@@ -13,11 +13,19 @@ const (
 	defaultRoute = "host"
 )
 
-// Agent - agent
-type Agent interface {
+// AgentT - agent
+type AgentT interface {
 	messaging.Agent
 	LogEgress(start time.Time, duration time.Duration, route string, req any, resp any, timeout time.Duration)
 	LogStatus(name string, status *core.Status)
+}
+
+var (
+	Agent AgentT
+)
+
+func init() {
+	Agent = newAgent()
 }
 
 type agentT struct {

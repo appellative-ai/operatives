@@ -9,19 +9,20 @@ import (
 )
 
 const (
-	nameName       = "name"
-	cNameName      = "cname"
-	authorName     = "author"
-	thing1Name     = "thing1"
-	thing2Name     = "thing2"
-	kindName       = "kind"
-	collectiveName = "collective"
-	domainName     = "domain"
-	pathName       = "path"
+	nameName   = "name"
+	cNameName  = "cname"
+	authorName = "author"
+	thing1Name = "thing1"
+	thing2Name = "thing2"
+	kindName   = "kind"
+	//collectiveName = "collective"
+	domainName = "domain"
+	pathName   = "path"
 
 	thingRequestSql = "CALL dbo.InsertThing($1,$2,$3,$4,$5,$6,$7)"
 )
 
+// thingRequest - only can update the current collective datastore
 func thingRequest(ctx context.Context, requester *request.Interface, values url.Values) (request.Result, error) {
 	if values == nil {
 		return request.Result{}, errors.New("query values are nil")

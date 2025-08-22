@@ -8,20 +8,7 @@ import (
 	"net/http"
 )
 
-type tagRetrieval struct {
-	Name string `json:"name"`
-	Args []arg  `json:"args"`
-}
-
-func filterRetrieval(ctx context.Context, retriever *retrieval.Interface, processor template.Agent, r *http.Request) (*bytes.Buffer, error) {
-	name := ""
-	res, err := processor.Build(name, nil)
-	if err != nil {
-		return nil, err
-	}
-	return retriever.Marshal(ctx, name, res.Sql, res.Args)
-}
-
+// queryRetrieval - applies to current and all linked collectives
 func queryRetrieval(ctx context.Context, retriever *retrieval.Interface, processor template.Agent, r *http.Request) (*bytes.Buffer, error) {
 	name := ""
 	res, err := processor.Build(name, nil)

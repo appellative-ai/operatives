@@ -11,6 +11,7 @@ import (
 	"github.com/appellative-ai/postgres/request"
 	"github.com/appellative-ai/postgres/retrieval"
 	"net/http"
+	"sync/atomic"
 	"time"
 )
 
@@ -19,15 +20,28 @@ const (
 	duration  = time.Second * 30
 	timeout   = time.Second * 4
 
+	collectiveName = "collective"
+	host1Name      = "host1"
+	host2Name      = "host2"
+
 	retrievalPath    = "/namespace/retrieval"
 	relationPath     = "/namespace/relation"
 	requestThingPath = "/namespace/request/thing"
 	requestLinkPath  = "/namespace/request/link"
 )
 
+var (
+	Agent messaging.Agent
+)
+
+func init() {
+	Agent = newAgent()
+}
+
 type agentT struct {
 	running bool
 	timeout time.Duration
+	links   atomic.Pointer[[]map[string]string]
 
 	ticker   *messaging.Ticker
 	emissary *messaging.Channel
@@ -62,10 +76,7 @@ func (a *agentT) Message(m *messaging.Message) {
 	}
 	switch m.Name {
 	case messaging.ConfigEvent:
-		if a.running {
-			return
-		}
-		messaging.UpdateContent[time.Duration](m, &a.timeout)
+		a.configure(m)
 		return
 	case messaging.StartupEvent:
 		if a.running {
@@ -118,7 +129,7 @@ func (a *agentT) Link(next core.Exchange) core.Exchange {
 			case retrievalPath:
 				buf, err = queryRetrieval(ctx, a.retriever, a.processor, req)
 			case relationPath:
-				buf, err = relationRequest(ctx, a.retriever, a.processor, req)
+				buf, err = relationRetrieval(ctx, a.retriever, a.processor, req)
 			case requestThingPath:
 				_, err = thingRequest(ctx, a.requester, req.URL.Query())
 			case requestLinkPath:
