@@ -14,10 +14,10 @@ const (
 	AgentName = "common:core:agent/operative/concurrency"
 	duration  = time.Second * 30
 
-	collectiveName = "collective"
-	host1Name      = "host1"
-	host2Name      = "host2"
-	routeName      = "route"
+	//collectiveName = "collective"
+	host1Name = "host1"
+	host2Name = "host2"
+	routeName = "route"
 )
 
 type AgentT interface {
@@ -26,12 +26,11 @@ type AgentT interface {
 }
 
 type agentT struct {
-	running    atomic.Bool
-	collective string
-	route      string
-	host1      atomic.Value
-	host2      atomic.Value
-	timeout    time.Duration
+	running atomic.Bool
+	route   string
+	host1   atomic.Value
+	host2   atomic.Value
+	timeout time.Duration
 
 	exchange core.Exchange
 
@@ -42,9 +41,7 @@ type agentT struct {
 func NewAgent(link map[string]string, timeout time.Duration) AgentT {
 	a := new(agentT)
 	a.running.Store(false)
-	a.collective = link[collectiveName]
 	a.route = link[routeName]
-
 	a.host1.Store(link[host1Name])
 	a.host2.Store(link[host2Name])
 	a.timeout = timeout
