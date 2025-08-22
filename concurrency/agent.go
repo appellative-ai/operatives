@@ -82,6 +82,7 @@ func (a *agentT) Message(m *messaging.Message) {
 func (a *agentT) Exchange(req *http.Request) (resp *http.Response, err error) {
 	ctx, cancel := core.NewContext(req.Context(), a.timeout)
 	defer cancel()
+	
 	req = req.Clone(ctx)
 	err = newURL(req, a.host1.Load().(string))
 	if err != nil {
