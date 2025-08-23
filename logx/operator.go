@@ -52,16 +52,6 @@ const (
 
 )
 
-var (
-	defaultOperators, _ = CreateOperators([]string{TrafficOperator, StartTimeOperator,
-		DurationOperator, RouteOperator,
-		RequestMethodOperator, RequestUrlOperator,
-		ResponseStatusCodeOperator,
-		ResponseContentEncodingOperator, ResponseBytesReceivedOperator,
-		TimeoutDurationOperator,
-	})
-)
-
 func isDirectOperator(op Operator) bool {
 	return !strings.HasPrefix(op.Value, OperatorPrefix)
 }

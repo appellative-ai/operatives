@@ -23,7 +23,13 @@ const (
 )
 
 var (
-	Origin *OriginT
+	Origin              *OriginT
+	defaultOperators, _ = CreateOperators([]string{TrafficOperator, StartTimeOperator,
+		DurationOperator, RouteOperator,
+		RequestMethodOperator, RequestUrlOperator,
+		ResponseStatusCodeOperator, ResponseContentEncodingOperator, ResponseBytesReceivedOperator,
+		TimeoutDurationOperator,
+	})
 )
 
 func init() {
