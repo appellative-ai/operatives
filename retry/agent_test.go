@@ -27,5 +27,6 @@ func ExampleExchange() {
 	fmt.Printf("test: Exchange() -> [%v] [ce:%v] [err:%v]\n", resp.StatusCode, resp.Header.Get(iox.ContentEncoding), err)
 
 	//Output:
-	//file
+	//test: Exchange() -> [200] [ce:] [err:<nil>]
+
 }
