@@ -56,10 +56,9 @@ var (
 	defaultOperators, _ = CreateOperators([]string{TrafficOperator, StartTimeOperator,
 		DurationOperator, RouteOperator,
 		RequestMethodOperator, RequestUrlOperator,
-		ResponseStatusCodeOperator, ResponseCachedOperator,
+		ResponseStatusCodeOperator,
 		ResponseContentEncodingOperator, ResponseBytesReceivedOperator,
-		TimeoutDurationOperator, RateLimitOperator,
-		RedirectOperator,
+		TimeoutDurationOperator,
 	})
 )
 

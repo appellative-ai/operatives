@@ -16,13 +16,13 @@ func (a *agentT) configure(m *messaging.Message) {
 		return
 	}
 	if l, ok := messaging.ConfigContent[map[string]string](m); ok && len(l) > 0 {
-		s := l[host1Name]
+		s := l[primaryHost]
 		if s != "" {
-			a.host1.Store(s)
+			a.primary.Store(s)
 		}
-		s = l[host2Name]
+		s = l[secondaryHost]
 		if s != "" {
-			a.host2.Store(s)
+			a.secondary.Store(s)
 		}
 		return
 	}

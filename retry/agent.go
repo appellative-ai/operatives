@@ -14,10 +14,9 @@ const (
 	AgentName = "common:core:agent/operative/retry"
 	duration  = time.Second * 30
 
-	//collectiveName = "collective"
-	host1Name = "host1"
-	host2Name = "host2"
-	routeName = "route"
+	primaryHost   = "primary"
+	secondaryHost = "secondary"
+	routeName     = "route"
 )
 
 type AgentT interface {
@@ -26,11 +25,11 @@ type AgentT interface {
 }
 
 type agentT struct {
-	running atomic.Bool
-	route   string
-	host1   atomic.Value
-	host2   atomic.Value
-	timeout time.Duration
+	running   atomic.Bool
+	route     string
+	primary   atomic.Value
+	secondary atomic.Value
+	timeout   time.Duration
 
 	exchange core.Exchange
 
@@ -42,8 +41,8 @@ func NewAgent(link map[string]string, timeout time.Duration) AgentT {
 	a := new(agentT)
 	a.running.Store(false)
 	a.route = link[routeName]
-	a.host1.Store(link[host1Name])
-	a.host2.Store(link[host2Name])
+	a.primary.Store(link[primaryHost])
+	a.secondary.Store(link[secondaryHost])
 	a.timeout = timeout
 
 	a.exchange = httpx.Do
@@ -78,22 +77,30 @@ func (a *agentT) Message(m *messaging.Message) {
 }
 
 // Exchange -
-// TODO : failover if active host timeouts
 func (a *agentT) Exchange(req *http.Request) (resp *http.Response, err error) {
+	resp, err = a.do(req, a.primary.Load().(string))
+	if err != nil || (resp.StatusCode == http.StatusTooManyRequests || resp.StatusCode == http.StatusGatewayTimeout) {
+		resp, err = a.do(req, a.secondary.Load().(string))
+	}
+	return
+}
+
+func (a *agentT) do(req *http.Request, host string) (resp *http.Response, err error) {
 	ctx, cancel := core.NewContext(req.Context(), a.timeout)
 	defer cancel()
 
 	req = req.Clone(ctx)
-	err = newURL(req, a.host1.Load().(string))
+	err = newURL(req, host)
 	if err != nil {
 		return httpx.NewResponse(http.StatusBadRequest, nil, nil), err
 	}
 	start := time.Now().UTC()
 	resp, err = a.exchange(req)
-	logger.Agent.LogEgress(start, time.Since(start), a.route, req, resp, a.timeout)
 	if err != nil {
+		logger.Agent.LogEgress(start, time.Since(start), a.route, req, resp, a.timeout)
 		return
 	}
 	err = httpx.TransformBody(resp)
+	logger.Agent.LogEgress(start, time.Since(start), a.route, req, resp, a.timeout)
 	return
 }
