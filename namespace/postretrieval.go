@@ -8,8 +8,8 @@ import (
 	"net/http"
 )
 
-// queryRetrieval - applies to current and all linked collectives
-func queryRetrieval(ctx context.Context, retriever *retrieval.Interface, processor template.Agent, r *http.Request) (*bytes.Buffer, error) {
+// postRetrieval - applies to current and all linked collectives
+func postRetrieval(ctx context.Context, retriever *retrieval.Interface, processor template.Agent, r *http.Request) (*bytes.Buffer, error) {
 	name := ""
 	res, err := processor.Build(name, nil)
 	if err != nil {

@@ -13,8 +13,9 @@ type tagRetrieval struct {
 	Args []arg  `json:"args"`
 }
 
-// filterRetrieval - applies to current and all linked collectives
-func filterRetrieval(ctx context.Context, retriever *retrieval.Interface, processor template.Agent, r *http.Request) (*bytes.Buffer, error) {
+// getRetrieval - applies to current and all linked collectives
+// TODO : set the route name which is the collective-name + route
+func getRetrieval(ctx context.Context, retriever *retrieval.Interface, processor template.Agent, r *http.Request) (*bytes.Buffer, error) {
 	name := ""
 	res, err := processor.Build(name, nil)
 	if err != nil {

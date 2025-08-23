@@ -7,6 +7,7 @@ import (
 	"github.com/appellative-ai/common/core"
 	"github.com/appellative-ai/common/httpx"
 	"github.com/appellative-ai/common/messaging"
+	"github.com/appellative-ai/operatives/retry"
 	"github.com/appellative-ai/operatives/template"
 	"github.com/appellative-ai/postgres/request"
 	"github.com/appellative-ai/postgres/retrieval"
@@ -20,9 +21,10 @@ const (
 	duration  = time.Second * 30
 	timeout   = time.Second * 4
 
-	collectiveName = "collective"
-	host1Name      = "host1"
-	host2Name      = "host2"
+	collectiveName    = "collective"
+	primaryHostName   = "primary"
+	secondaryHostName = "secondary"
+	routeName         = "route"
 
 	retrievalPath    = "/namespace/retrieval"
 	relationPath     = "/namespace/relation"
@@ -43,6 +45,8 @@ type agentT struct {
 	timeout time.Duration
 	links   atomic.Pointer[[]map[string]string]
 
+	retry retry.AgentT
+
 	ticker   *messaging.Ticker
 	emissary *messaging.Channel
 
@@ -53,6 +57,7 @@ type agentT struct {
 
 func newAgent() *agentT {
 	a := new(agentT)
+	a.retry = retry.NewAgent(timeout)
 	a.timeout = timeout
 	a.ticker = messaging.NewTicker(messaging.ChannelEmissary, duration)
 	a.emissary = messaging.NewEmissaryChannel()
@@ -120,14 +125,14 @@ func (a *agentT) Link(next core.Exchange) core.Exchange {
 		switch req.Method {
 		case http.MethodGet:
 			if req.URL.Path == retrievalPath {
-				buf, err = filterRetrieval(ctx, a.retriever, a.processor, req)
+				buf, err = getRetrieval(ctx, a.retriever, a.processor, req)
 			} else {
 				return httpx.NewResponse(http.StatusBadRequest, nil, nil), errors.New(fmt.Sprintf("resource is invalid [%v] for GET method", req.URL.Path))
 			}
 		case http.MethodPost:
 			switch req.URL.Path {
 			case retrievalPath:
-				buf, err = queryRetrieval(ctx, a.retriever, a.processor, req)
+				buf, err = postRetrieval(ctx, a.retriever, a.processor, req)
 			case relationPath:
 				buf, err = relationRetrieval(ctx, a.retriever, a.processor, req)
 			case requestThingPath:

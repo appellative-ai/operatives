@@ -8,7 +8,7 @@ import (
 )
 
 func ExampleNewAgent() {
-	a := NewAgent(nil, 0)
+	a := NewAgent(0)
 
 	fmt.Printf("test: newAgent() -> [%v]\n", a)
 
@@ -18,8 +18,9 @@ func ExampleNewAgent() {
 }
 
 func ExampleExchange() {
-	m := map[string]string{routeName: "route", primaryHost: "localhost:8080", secondaryHost: "google.com"}
-	a := NewAgent(m, time.Millisecond*2000)
+	a := newAgent(time.Millisecond * 2000)
+	a.primary.Store("localhost:8080")
+	a.secondary.Store("google.com")
 
 	req, _ := http.NewRequest("GET", "/search?q=golang", nil)
 	req.Header.Set(iox.AcceptEncoding, iox.GzipEncoding)
